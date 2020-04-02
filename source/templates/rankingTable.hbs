@@ -1,0 +1,32 @@
+<style type="text/css">
+  .label-title1 {
+    float:left;
+    width: 100%;
+    text-align: center;
+    text-shadow: 1px 1px black;
+    font-size: 15px;
+    font-weight:bold;
+    line-height:20px;
+    background-color:#8392A2;
+    margin: 10px 0px 3px 0px;
+  }
+</style>
+<table width="100%">
+  <tr>
+    <th><span class="label label-title1">{{category}}</span></th>
+  </tr>
+</table>
+<table class="table table-striped table-condensed">
+  <tr>
+    <td><strong>r&agrave;nquing</strong></td>
+    <td><strong>nom</strong></td>
+    <td><strong>punts</strong></td>
+  </tr>
+  {{#each terms}}
+  <tr>
+    <td><span class="label label-warning" style="font-size: 15px; font-weight: bold;">&nbsp;&nbsp;{{position}}&nbsp;&nbsp;</span></td>
+    <td><i>{{name}}</i></td>
+    <td>{{count}}</td>
+  </tr>
+  {{/each}}
+</table>

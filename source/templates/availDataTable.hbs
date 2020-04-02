@@ -1,0 +1,79 @@
+<style type="text/css">
+  .label-title1 {
+    float:left;
+    width: 100%;
+    text-align: left;
+    text-shadow: 1px 1px black;
+    font-size: 15px;
+    font-weight:bold;
+    line-height:20px;
+    background-color:#868686;
+    margin: 10px 0px 3px 0px;
+  }
+  .label-title2 {float:left;
+    width: 100%;
+    text-align: left;
+    text-shadow: 1px 1px white;
+    font-size:12px;
+    font-weight:bold;
+    line-height:20px;
+    color:#4F4F4F;
+    background-color: #DCDCDC;
+    margin: 3px 0px 1px 0px;
+  }
+  .input-calendar {
+    width: 100%;
+    margin-top: 0px;
+    margin-bottom: 11px;
+    box-sizing: border-box;
+    border: 1px solid #dddddd;
+    border-radius: 2px;
+    text-align: center;
+    font-family: arial;
+    font-size: 11px;
+    /*font-weight: bold;*/
+    color: #222222;
+    padding: 2px 1px 2px 1px;
+  }
+</style>
+
+<h3>{{year_month}}</h3>
+{{#each availGroups}}
+  <table width="100%">
+    <tr>
+      <th><span class="label label-title1">&nbsp;{{this.name}}</span></th>
+    </tr>
+  </table>
+
+  {{#each this.rows}}
+    <table width="100%">
+      <tr>
+        <th><span class="label label-title2">&nbsp;{{this.name}}</span></th>
+      </tr>
+    </table>
+    <div>
+      <table>
+        <tbody>
+          <tr>
+            <form>
+              {{#each this.availability}}
+              <td style="padding: 2px;">
+                {{#if this.ok}}
+                  <input type="text" class="input-calendar" value="{{this.day}}" style="background-color: rgb(140, 225, 140);" disabled>
+                {{/if}}
+                {{#if this.missing}}
+                  <input type="text" class="input-calendar" value="{{this.day}}" style="background-color: rgb(255, 153, 153);" disabled>
+                {{/if}}
+                {{#if this.padding}}
+                  <input type="text" class="input-calendar" value="{{this.day}}" style="background-color: #C0C0C0;" disabled>
+                {{/if}}
+              </td>
+              {{/each}}
+            </form>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  {{/each}}
+
+{{/each}}

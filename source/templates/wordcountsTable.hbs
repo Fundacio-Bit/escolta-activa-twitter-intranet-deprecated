@@ -1,0 +1,19 @@
+<br><br>
+<table class="table table-striped table-condensed">
+  <tr>
+    <td><strong>#</strong></td>
+    <td><strong>marca</strong></td>
+    <td><strong>data</strong></td>
+    <td><strong>terme</strong></td>
+    <td><strong>freq.</strong></td>
+  </tr>
+  {{#each wordcounts}}
+  <tr>
+    <td>{{index}}</td>
+    <td><span class="label label-default">{{brand}}</span></td>
+    <td nowrap>{{date}}</td>
+    <td class="clickable"><a style="text-decoration: none;" href="#"><i>{{term}}</i></a></td>
+    <td><span class="label label-success">{{freq}}</span></td>
+  </tr>
+  {{/each}}
+</table>

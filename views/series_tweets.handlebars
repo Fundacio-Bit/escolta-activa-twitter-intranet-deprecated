@@ -1,0 +1,73 @@
+{{> menubar series_is_active=true}}
+
+<div class="container-fluid">
+
+  <!-- ====== -->
+  <!-- Título -->
+  <!-- ====== -->
+  <div class="row">
+    <div class="col-md-12">
+      <br><br>
+      <h3>S&egrave;ries de tweets</h3>
+    </div>
+  </div>
+
+  <!-- ========== -->
+  <!-- Formulario -->
+  <!-- ========== -->
+  <div class="row well">
+    <div class="col-md-12">
+      <form id="searchForm" class="form-inline">
+          <div class="form-group">
+            <label>Any</label>
+            <select name="year" class="form-control">
+              <option value="" disabled selected hidden>-- Triar --</option>
+            </select>
+          </div>
+          <div id="form-group-brands" class="form-group">
+          </div>
+          <button id="searchButton" class="btn btn-default">Genera s&egrave;rie</button>
+          <button type="reset" class="btn btn-default">Netejar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ -->
+  <!-- Status panel -->
+  <!-- ============ -->
+  <div class="row">
+    <div class="col-md-12">
+      <div id="statusPanel">
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== -->
+  <!-- Gráfica serie temporal -->
+  <!-- ====================== -->
+  <div class="row">
+    <div class="col-md-12">
+      <br>
+      <div id="chartContainer">
+        <canvas id="seriesChart" width="70%" height="20px"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>  <!-- fin container-fluid -->
+
+{{> footer_scripts}}
+
+<script src="/lib/js/Chart.js"></script>
+<script type="text/javascript" src="/js/series_tweets.js"></script>
+<script type="text/javascript">
+    $(function() {
+        var myOptions = [new Date().getFullYear()-1 ,new Date().getFullYear()];
+        var mySelect = $("[name='year']");
+        $.each(myOptions, function(val) {
+          mySelect.append(
+              $('<option></option>').val(myOptions[val]).html(myOptions[val])
+          );
+        });
+    });
+</script>

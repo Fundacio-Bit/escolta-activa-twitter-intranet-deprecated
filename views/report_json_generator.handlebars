@@ -1,0 +1,45 @@
+{{> menubar json_generator_is_active=true}}
+
+<div class="container-fluid">
+
+  <!-- ====== -->
+  <!-- Título -->
+  <!-- ====== -->
+  <div class="row">
+    <div class="col-md-12">
+      <br><br>
+      <h3>Generaci&oacute; de JSON Report</h3>
+    </div>
+  </div>
+
+  <!-- ========== -->
+  <!-- Formulario -->
+  <!-- ========== -->
+  <div class="row well">
+    <div class="col-md-12">
+      <form id="searchForm" class="form-inline">
+        <!--<div class="form-group">
+          <input name="yearmonth" type="text" size="12" class="form-control" placeholder="Mes">
+        </div>-->
+        <button id="searchButton" type="submit" class="btn btn-default">Generar JSON del mes anterior</button>
+        &nbsp;&nbsp;&nbsp;<img height="50" width="50" src="/img/warning_icon.png"><b><span style="color: #ff2244">ALERTA! Aquesta operació <u>eliminarà</u> el JSON, que inclou r&agrave;nquings i influencers ja editats.</span></b>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ -->
+  <!-- Status panel -->
+  <!-- ============ -->
+  <div class="row">
+    <div class="col-md-12">
+      <div id="statusPanel">
+      </div>
+    </div>
+  </div>
+
+</div>  <!-- fin container-fluid -->
+
+
+{{> footer_scripts}}
+
+<script type="text/javascript" src="/js/report_json_generator.js"></script>

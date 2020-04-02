@@ -1,0 +1,10 @@
+/node_modules
+/public
+/source/routers/*/*.js
+/source/routers/rest_dictionary_terms/utils/__normalize_text.js
+/source/routers/rest_etl_tracking/utils/*.js
+/_config.js
+/server.js
+package-lock.json
+launch.json
+# /.vscode

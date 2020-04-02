@@ -1,0 +1,29 @@
+<br><p>Trobats <strong>{{total_tweets}}</strong> tweets.</p>
+<table class="table table-striped table-condensed">
+  <tr>
+    <td><strong>marca</strong></td>
+    <td><strong>data</strong></td>
+    <td><strong>&eacute;s retweet</strong></td>
+    <td><strong>text</strong></td>
+    <td><strong>autor</strong></td>
+    <td><strong>localizaci&oacute;</strong></td>
+    {{!-- <td><strong>retweet link</strong></td> --}}
+    <td><strong>usuari original</strong></td>
+    <td><strong>localizaci&oacute; original</strong></td>
+    <td><strong>data original</strong></td>
+  </tr>
+  {{#each tweets}}
+  <tr>
+    <td><span class="label label-default">{{brand}}</span></td>
+    <td nowrap>{{date}}</td>
+    <td><span style="color:#00aa00">{{{is_retweet}}}</span></td>
+    <td>{{{text}}}</td>
+    <td><a target="_blank" href="http://www.twitter.com/{{user_name}}">{{user_name}}</a></td>
+    <td>{{user_location}}</td>
+    {{!-- <td><a target="_blank" href="http://www.twitter.com/i/web/status/{{ori_id_str}}">retweet link</a></td> --}}
+    <td>{{{ori_user}}}</td>
+    <td>{{{ori_location}}}</td>
+    <td nowrap>{{{ori_date}}}</td>
+  </tr>
+  {{/each}}
+</table>

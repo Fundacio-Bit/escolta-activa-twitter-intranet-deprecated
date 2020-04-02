@@ -1,0 +1,56 @@
+<!-- ============= -->
+<!-- Menubar -->
+<!-- ============= -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse-1" aria-expanded="false">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="/"><strong style="font-size: 27px"><span style="color: rgb(215, 215, 0)">Twitter</span><span style="color: rgb(110, 210, 140)">Reports</span></strong></a>
+  </div>
+  <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+
+      <!-- SERIES -->
+      <li class="dropdown {{#if series_is_active}}active{{/if}}">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">S&egrave;ries <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/series/tweets">S&egrave;ries de tweets</a></li>
+          <li><a href="/series/terms">S&egrave;ries de termes</a></li>
+          <li><a href="/series/tweets_filtrats">S&egrave;ries de tweets filtrats</a></li>
+        </ul>
+      </li>
+
+      <!-- TWEETS -->
+      <li class="dropdown {{#if tweets_is_active}}active{{/if}}">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tweets <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/tweets/terms">Tweets <strong>destacats</strong> per <strong>terme</strong> (<i>recompte <b>desglossat</b> per dia</i>)</a></li>
+          <li><a href="/tweets/viral_tweets">Tweets <strong>virals</strong></a></li>
+        </ul>
+      </li>
+
+      <!-- DICTIONARIES -->
+      <li class="dropdown {{#if dictionaries_is_active}}active{{/if}}">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Diccionaris <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/dictionary/terms">Diccionari de termes</a></li>
+          <li><a href="/dictionary/influencers">Diccionari d'influencers</a></li>
+        </ul>
+      </li>
+
+      <!-- MAPS -->
+      <li class="dropdown {{#if maps_is_active}}active{{/if}}"><a href="/maps">Mapes</a></li>
+
+
+      <!-- JSON REPORT GENERATOR -->
+      <li class="{{#if json_generator_is_active}}active{{/if}}"><a href="/report_json_generator">Generaci&oacute; de JSON Report</a></li>
+
+      <!-- REPORTS -->
+      <li class="{{#if reports_is_active}}active{{/if}}"><a href="/reports">Edici&oacute; de Reports</a></li>
+    </ul>
+  </div>
+</nav>

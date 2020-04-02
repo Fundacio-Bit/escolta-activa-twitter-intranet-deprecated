@@ -1,0 +1,17 @@
+{{#if label}}
+<label>Marca</label>
+{{/if}}
+<select name="brand" class="form-control">
+  {{#if all_brands}}
+  <option value="--all--">-- Marca (totes) --</option>
+  {{else if mandatory}}
+  <option value="" disabled selected hidden>-- Marca --</option>
+  {{!-- <option value="" disabled selected hidden>-- Triar --</option> --}}
+  {{else if all}}
+  <option value="--all--" selected>-- Marca (totes) --</option>
+  {{!-- <option value="--all--" selected>-- Marca (totes) --</option> --}}
+  {{/if}}
+  {{#each entries}}
+  <option value="{{value}}">{{name}}</option>
+  {{/each}}
+</select>

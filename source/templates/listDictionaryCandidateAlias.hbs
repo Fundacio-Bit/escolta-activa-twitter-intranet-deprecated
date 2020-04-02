@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-md-6">
+    <b>Seleccionar &agrave;lies:</b>
+    <form id="checkboxAliasListForm">
+
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" class="check" id="checkAll"> Seleccionar Tots
+        </label>
+      </div>
+
+      {{#each discarded_alias}}
+      <div class="checkbox">
+        <label>
+        <input type="checkbox" class="check" name="aliasCheckBox" disabled="disabled" value="{{alias}}">&nbsp;<i><span class="text-danger">{{alias}}</span></i>
+        </label>
+      </div>
+      {{/each}}
+      {{#each candidate_alias}}
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" class="check" name="aliasCheckBox" value="{{alias}}">&nbsp;<i>{{alias}}</i>
+        </label>
+      </div>
+      {{/each}}
+      {{#each other_alias}}
+      <div class="checkbox">
+        <label>
+        <input type="checkbox" class="check" name="aliasCheckBox" value="{{alias}}">&nbsp;<i><span class="text-primary">{{alias}}</span></i>
+        </label>
+      </div>
+      {{/each}}
+      <button id="saveButton" class="btn btn-primary">Guardar</button>
+      <button type="reset" class="btn btn-default">Netejar</button>
+    </form>
+  </div>
+  <div class="col-md-6">
+  <b>Afegir &agrave;lies a la llista:</b><br>(Guia: En min&uacute;scules, sense puntuacions, ni accents, ni stopwords tret d'excepcions com 'es trenc' o 'els pujols')
+    <form id="addNewAliasForm">
+      <div class="form-group">
+        <div>
+          <input class="form-control" name="newAlias">
+        </div>
+      </div>
+      <button id="addNewAliasButton" class="btn btn-default">Afegir</button>
+      <button type="reset" class="btn btn-default">Netejar</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  $("#checkAll").click(function () {
+    $(".check").prop('checked', $(this).prop('checked'));
+  });
+</script>

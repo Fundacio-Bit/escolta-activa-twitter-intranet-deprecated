@@ -1,0 +1,120 @@
+{{> menubar series_is_active=true}}
+
+<div class="container-fluid">
+
+  <!-- ====== -->
+  <!-- Título -->
+  <!-- ====== -->
+  <div class="row">
+    <div class="col-md-12">
+      <br><br>
+      <h3>S&egrave;ries de termes</h3>
+    </div>
+  </div>
+
+  <!-- ========== -->
+  <!-- Formulario -->
+  <!-- ========== -->
+  <div class="row well">
+    <div class="col-md-12">
+
+      <div class="row">
+        <div class="col-md-12">
+          <form id="searchFormAlias" class="form-inline">
+            <div class="form-group">
+            <select name="year" class="form-control">
+              <option value="" disabled selected hidden>-- Any --</option>
+            </select>
+            </div>
+            <div id="form-group-brands" class="form-group">
+            </div>
+            <div class="form-group">
+              <input name="term" type="text" size="35" class="form-control" placeholder="Termes (separar per comes)">
+            </div>
+            <button id="searchButtonAlias" type="submit" class="btn btn-default">Cercar</button>
+            <button id="resetButtonAlias" type="reset" class="btn btn-default">Netejar</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <br>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <form id="searchFormDictEntry" class="form-inline">
+            <div class="form-group">
+              <select name="year" class="form-control">
+                <option value="" disabled selected hidden>-- Any --</option>
+              </select>
+            </div>
+            <div id="form-group-brands-category" class="form-group">
+            </div>
+            <div class="form-group">
+              <select name="category" class="form-control">
+                <option value="--all--" selected>-- Categoria --</option>
+                <option value="esdeveniments">Esdeveniments</option>
+                <option value="esports">Esports</option>
+                <option value="naturalesa">Naturalesa</option>
+                <option value="patrimoni">Patrimoni</option>
+                <option value="platges">Platges</option>
+                <option value="toponims">Top&ograve;nims</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <select name="canonicalName" class="form-control">
+                <option value="-1" selected>-- Nom canònic --</option>
+              </select>
+            </div>
+            <button id="searchButtonDictEntry" type="submit" class="btn btn-default">Cercar</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ -->
+  <!-- Status panel -->
+  <!-- ============ -->
+  <div class="row">
+    <div class="col-md-12" id="statusPanel">
+    </div>
+  </div>
+
+  <!-- ====================== -->
+  <!-- Gráfica serie temporal -->
+  <!-- ====================== -->
+  <div class="row">
+    <div class="col-md-12">
+      <br>
+      <div id="chartContainer">
+        <canvas id="seriesChart" width="70%" height="20px"></canvas>
+      </div>      
+    </div>
+  </div>
+
+</div>  <!-- fin container-fluid -->
+
+{{> footer_scripts}}
+
+<script src="/lib/js/Chart.js"></script>
+<script type="text/javascript" src="/js/series_terms.js"></script>
+<!-- ======================================= -->
+<!-- Available years (selector options)      -->
+<!-- ======================================= -->
+<script type="text/javascript">
+    $(function() {
+        var myOptions = [new Date().getFullYear()-1 ,new Date().getFullYear()];
+        var mySelect = $("[name='year']");
+        $.each(myOptions, function(val) {
+          mySelect.append(
+              $('<option></option>').val(myOptions[val]).html(myOptions[val])
+          );
+        });
+    });
+</script>
+

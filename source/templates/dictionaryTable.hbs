@@ -1,0 +1,27 @@
+<p>Trobades <strong>{{total_entries}}</strong> entrades.</p>
+<table class="table table-striped table-condensed">
+  <tr>
+    <td><strong>marca</strong></td>
+    <td><strong>categor&iacute;a</strong></td>
+    <td><strong>nom can&ograve;nic</strong></td>
+    <td><strong>&agrave;lies normalitzats</strong></td>
+    <td><strong>creat</strong></td>
+    <td><strong>modificat</strong></td>
+    <td><strong>autor</strong></td>
+    <td><strong>estat</strong></td>
+    <td><strong>esborra</strong></td>
+  </tr>
+  {{#each entries}}
+  <tr>
+    <td><span class="label label-warning">{{brand}}</span></td>
+    <td><span class="label label-success">{{category}}</span></td>
+    <td><i>{{_canonical_name}}</i></td>
+    <td class="updateAlias" id="{{_id}}" name="{{_canonical_name}}"><i>{{alias}}</i></td>
+    <td nowrap>{{creation_date}}</td>
+    <td nowrap>{{last_modified}}</td>
+    <td><span class="label label-default">{{created_by}}</span></td>
+    <td class="updateStatus" id="{{_id}}"><span class="label label-danger">{{status}}</span></td>
+    <td class="text-center remove"><a href="{{_id}}"><span style="color: red;" class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+  </tr>
+  {{/each}}
+</table>

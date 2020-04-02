@@ -1,0 +1,26 @@
+<b>Marca</b>
+<div class="chekbox">
+  <label style="font-weight: 400">
+    <input type="checkbox" id="checkAllBrands" class="checkBrand"> Seleccionar Tots
+  </label>
+</div>
+{{#each entries}}
+<div class="chekbox">
+  <label style="font-weight: 400">
+    <input type="checkbox" name="brand" class="checkBrand" value="{{value}}" > {{name}}
+  </label>
+</div>
+{{/each}}
+  {{!-- <select name="brand" class="form-control">
+    <option value="" disabled selected hidden>-- Triar --</option>
+    {{#each entries}}
+    <option value="{{value}}">{{name}}</option>
+    {{/each}}
+  </select> --}}
+<div id="brandError"></div>
+</div>
+<script>
+  $("#checkAllBrands").click(function () {
+    $(".checkBrand").prop('checked', $(this).prop('checked'));
+  });
+</script>

@@ -1,0 +1,164 @@
+{{> menubar reports_is_active=true}}
+
+<style type="text/css">
+  .zoom {
+    -webkit-transition: all 0.35s ease-in-out;
+    -moz-transition: all 0.35s ease-in-out;
+    transition: all 0.35s ease-in-out;
+    cursor: -webkit-zoom-in;
+    cursor: -moz-zoom-in;
+    cursor: zoom-in;
+  }
+
+  .zoom:hover,
+  .zoom:active,
+  .zoom:focus {
+    /**adjust scale to desired size,
+    add browser prefixes**/
+    -ms-transform: scale(2.5);
+    -moz-transform: scale(2.5);
+    -webkit-transform: scale(2.5);
+    -o-transform: scale(2.5);
+    transform: scale(2.5);
+    position:relative;
+    z-index:100;
+  }
+</style>
+
+<div class="container-fluid">
+
+  <!-- ====== -->
+  <!-- Título -->
+  <!-- ====== -->
+  <div class="row">
+    <div class="col-md-12">
+      <br><br>
+      <h3>Edici&oacute; de Reports</h3>
+    </div>
+  </div>
+
+  <!-- ========== -->
+  <!-- Formulario -->
+  <!-- ========== -->
+  <div class="row well">
+    <div class="col-md-12">
+      <form id="searchForm" class="form-inline">
+          <div class="form-group">
+            <label>Any</label>
+            <select name="year" class="form-control">
+            </select>
+          </div>
+
+          <button id="searchButton" type="submit" class="btn btn-default">Cercar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ -->
+  <!-- Status panel -->
+  <!-- ============ -->
+  <div class="row">
+    <div class="col-md-12">
+      <div id="statusPanel">
+      </div>
+    </div>
+  </div>
+
+  <!-- ================ -->
+  <!-- Tabla de reports -->
+  <!-- ================ -->
+  <div class="row">
+    <div class="col-md-12">
+      <div id="reportsTable">
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- Modal: Twitter 'Tweets Escrutats' de un report -->
+  <!-- ============================================== -->
+  <div id="reportTweetsEscrutatsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="background-color: #fff;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="reportTweetsEscrutatsTitle"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="col-md-8"><h4>Tweet counts</h4></div>
+          <div class="col-md-4" id="tweetsEscrutatsCSVPanel">
+          </div>
+          {{!-- <div style="width: 60%" id="reportTweetCountsChart"></div> --}}
+
+          <div id="chartContainer">
+            <canvas id="reportTweetCountsChart" width="60%" height="20px"></canvas>
+          </div> 
+
+          <br><div id="reportTweetCountsTable"></div><br>
+        </div>
+        <div class="modal-footer">
+          <div class="row">
+            <div class="col-md-10" id="reportTweetsEscrutatsStatusPanel">
+            </div>
+            <div class="col-md-2">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Tancar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================== -->
+  <!-- Modal: Twitter 'Idiomes' de un report -->
+  <!-- ===================================== -->
+  <div id="reportIdiomesModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="background-color: #fff;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="reportIdiomesTitle"></h4>
+        </div>
+
+        <div class="modal-body">
+          <div class="col-md-8"><h4>Language counts</h4></div>
+          <div class="col-md-4" id="idiomesCSVPanel">
+          </div>
+          <br>
+          <div id="reportNotesLanguageCountsTable"></div><br>
+          <br>
+        </div>
+        <div class="modal-footer">
+          <div class="row">
+            <div class="col-md-10" id="reportIdiomesStatusPanel">
+            </div>
+            <div class="col-md-2">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Tancar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>  <!-- fin container-fluid -->
+
+{{> footer_scripts}}
+
+<script src="/lib/js/Chart.js"></script>
+<script type="text/javascript" src="/js/reports.js"></script>
+<!-- ======================================= -->
+<!-- Available years (selector options)      -->
+<!-- ======================================= -->
+<script type="text/javascript">
+    $(function() {
+        var myOptions = [new Date().getFullYear()-1 ,new Date().getFullYear()];
+        var mySelect = $("[name='year']");
+        $.each(myOptions, function(val) {
+          mySelect.append(
+              $('<option></option>').val(myOptions[val]).html(myOptions[val])
+          );
+        });
+    });
+</script>

@@ -1,0 +1,23 @@
+<p>Trobats <strong>{{total_tweets}}</strong> tweets destacats.</p>
+<table class="table table-striped table-condensed">
+  <tr>
+    <td><strong>marca</strong></td>
+    <td><strong>data del retweet</strong></td>
+    <td><strong>data de l'original</strong></td>
+    <td><strong>text tweet original</strong></td>
+    <td><strong>autor original</strong></td>
+    <td><strong>localitzaci&oacute;</strong></td>
+    <td><strong>retweets</strong></td>
+  </tr>
+  {{#each tweets}}
+  <tr>
+    <td><span class="label label-default">{{brand}}</span></td>
+    <td nowrap>{{{search_date}}}</td>
+    <td nowrap>{{date}}</td>
+    <td>{{{text}}}</td>
+    <td><a target="_blank" href="http://www.twitter.com/{{user_name}}">{{user_name}}</a></td>
+    <td>{{user_location}}</td>
+    <td><span class="label label-success">{{count}}</span></td>
+  </tr>
+  {{/each}}
+</table>

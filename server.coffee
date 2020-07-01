@@ -209,6 +209,9 @@ launch_server = ->
     app.get '/report_json_generator', (req, res) ->
         res.render 'report_json_generator'
 
+    app.get '/reports_covid', (req, res) ->
+        res.render 'reports_covid'
+
     # Start server
     # --------------------
     port = process.env.PORT or 5000

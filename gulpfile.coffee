@@ -223,7 +223,15 @@ gulp.task 'compile-router_8', ->
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('source/routers/rest_blacklists/'))
 
-gulp.task 'compile-server-rest-coffee', ['compile-server', 'compile-config', 'compile-router_1', 'compile-router_2', 'compile-router_3', 'compile-router_4', 'compile-router_5', 'compile-router_6', 'compile-router_7', 'compile-router_8'], ->
+gulp.task 'compile-router_9', ->
+    gulp.src('source/routers/rest_reporting_covid/*.coffee')
+        .pipe(sourcemaps.init())
+        .pipe(coffee())
+        # .pipe(uglify())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('source/routers/rest_reporting_covid/'))
+
+gulp.task 'compile-server-rest-coffee', ['compile-server', 'compile-config', 'compile-router_1', 'compile-router_2', 'compile-router_3', 'compile-router_4', 'compile-router_5', 'compile-router_6', 'compile-router_7', 'compile-router_8', 'compile-router_9'], ->
     console.log "\nCompilados scripts de CoffeeScript de 'server.coffee' y routers REST.\n"
 
 

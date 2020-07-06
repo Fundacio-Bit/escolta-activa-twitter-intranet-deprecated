@@ -165,6 +165,7 @@ launch_server = ->
     app.use '/rest_reporting', require('./source/routers/rest_reporting/router')(g_config)
     app.use '/rest_utils', require('./source/routers/rest_utils/router')(g_config)
     app.use '/rest_maps', require('./source/routers/rest_maps/router')(g_config)
+    app.use '/rest_reporting_covid', require('./source/routers/rest_reporting_covid/router')(g_config)
 
     # Template engine Handlebars
     # ---------------------------

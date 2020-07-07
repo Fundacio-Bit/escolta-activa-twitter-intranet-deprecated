@@ -3,6 +3,8 @@
 # Modified by: Elena Aguado and Óscar Moya
 # =========================================
 
+refreshIntervalId = 0
+
 g_dictionary_categories = ['esdeveniments', 'esports', 'toponims', 'platges', 'patrimoni', 'naturalesa']
 
 g_brands = []
@@ -310,7 +312,7 @@ g_zip_status = {}  # it will save the zip status for each yearmonth
     # ==================================
     $('#searchButton').unbind().click (event) ->
         event.preventDefault()  # avoid the submit default behaviour
- 
+
         year = $('#searchForm select[name="year"]').val()
         source = 'twitter'
 
@@ -345,7 +347,9 @@ g_zip_status = {}  # it will save the zip status for each yearmonth
             # ----------------------------------------------
             # Refresh the reports limits at every time interval
             # -----------------------------------------------
-            setInterval ( ->
+            if refreshIntervalId
+                clearInterval(refreshIntervalId);
+            refreshIntervalId = setInterval ( ->
                 refreshReportsList g_current_year, g_current_source
                 ), 7000
             # -----------------------------------------------------------

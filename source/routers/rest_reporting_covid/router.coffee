@@ -58,42 +58,46 @@ create_router = (config) ->
         if not /^\d\d\d\d-\d\d-\d\d$/.test(date) then return res.json {error: "Format de 'date' invàlid. Format vàlid: 'YYYY-MM-DD'."}
 
         zips = utils.get_zip_files(zip_dir)  # sacamos los paths de los zip's que existen actualmente
+        re = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
         for filename in zips
-            zip_file = zip_dir + filename
-            file = fs.createReadStream zip_file
-            stat = fs.statSync zip_file
-            res.setHeader('Content-Length', stat.size)
-            res.setHeader('Content-Type', 'application/zip')
-            res.setHeader('Content-Disposition', "attachment; filename=escolta_activa_twitter_covid_tourism_#{date}.zip")
-            file.pipe(res)
+            if(filename.match(re)[0] == date)
+                zip_file = zip_dir + filename
 
-    # --------------------------------------------
-    # GENERATE monthly and cumulative CSVs and ZIP
-    # --------------------------------------------
-    router.get '/reports/twitter/generate/zip/date/:date', (req, res) ->
-        date = req.params.date
-        if not /^\d\d\d\d-\d\d-\d\d$/.test(date) then return res.json {error: "Format de 'date' invàlid. Format vàlid: 'YYYY-MM-DD'."}
+                console.log("zip_file:" + zip_file)
+                file = fs.createReadStream zip_file
+                stat = fs.statSync zip_file
+                res.setHeader('Content-Length', stat.size)
+                res.setHeader('Content-Type', 'application/zip')
+                res.setHeader('Content-Disposition', "attachment; filename=#{filename}")
+                file.pipe(res)
 
-        if !fs.existsSync(output_dir)
-            fs.mkdirSync output_dir
-        if !fs.existsSync(output_dir + 'zip')
-            fs.mkdirSync output_dir + 'zip'
+    # # --------------------------------------------
+    # # GENERATE monthly and cumulative CSVs and ZIP
+    # # --------------------------------------------
+    # router.get '/reports/twitter/generate/zip/date/:date', (req, res) ->
+    #     date = req.params.date
+    #     if not /^\d\d\d\d-\d\d-\d\d$/.test(date) then return res.json {error: "Format de 'date' invàlid. Format vàlid: 'YYYY-MM-DD'."}
 
-        output_path = zip_dir + 'escolta_activa_twitter_covid_tourism_' + date + '.zip'
+    #     if !fs.existsSync(output_dir)
+    #         fs.mkdirSync output_dir
+    #     if !fs.existsSync(output_dir + 'zip')
+    #         fs.mkdirSync output_dir + 'zip'
+
+    #     output_path = zip_dir + 'escolta_activa_twitter_covid_tourism_' + date + '.zip'
     
-        zip_directory_contents = (source, output_path) ->
-            archive = archiver('zip', { zlib: { level: 9 }})
-            stream = fs.createWriteStream(output_dir);
+    #     zip_directory_contents = (source, output_path) ->
+    #         archive = archiver('zip', { zlib: { level: 9 }})
+    #         stream = fs.createWriteStream(output_dir);
 
-            archive.directory(source, false)
-                .on('error', (err) -> reject({error: err}))
-                .pipe(stream)
+    #         archive.directory(source, false)
+    #             .on('error', (err) -> reject({error: err}))
+    #             .pipe(stream)
 
-            stream.on('close', () -> return({message: "The ZIP has been created"}))
-            archive.finalize()
+    #         stream.on('close', () -> return({message: "The ZIP has been created"}))
+    #         archive.finalize()
 
 
-        return zip_directory_contents(output_dir, output_path)
+    #     return zip_directory_contents(output_dir, output_path)
 
 
     router

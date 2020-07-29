@@ -1,5 +1,4 @@
 express = require 'express'
-PythonShell = require 'python-shell'
 moment = require 'moment'
 moment.locale('ca')
 mongodb = require 'mongodb'

@@ -2,7 +2,6 @@ fs = require 'fs'
 express = require 'express'
 bodyParser = require 'body-parser'
 MongoClient = require('mongodb').MongoClient
-PythonShell = require 'python-shell'
 moment = require 'moment'
 archiver = require 'archiver'
 path = require 'path'
@@ -57,15 +56,13 @@ create_router = (config) ->
         config.mongo_cols[collection_name].find(query, projection).sort({'header.month': -1}).toArray (err, items) ->
             if not err
                 if items.length is 0
-                    res.json {error: "No existeixen dades per l'any indicat: <strong>#{req.params.year}</strong>"}
+                    res.json {error: "No existeixen dades per l'any indicat: <strong>#{req.params.year}</strong> a la colleció " + collection_name}
                 else
                     zips = utils.get_zip_files(config.context.output_base_dir)  # sacamos los paths de los zip's que existen actualment
 
                     months = items.map (item) ->
                         month: item.header.month
                         links: item.links
-                        rankings: item.sections.rankings
-                        influencers: item.sections.influencers
                         tweet_counts: item.sections.tweet_counts
                         language_counts: item.sections.language_counts
                         zip_exists: if item.header.month in (x for x of zips) then true else false
@@ -89,38 +86,8 @@ create_router = (config) ->
             else
                 res.json {error: err}
 
-    # ----------------------------------------------------------------
-    # EXTRAE report JSON de Twitter de un mes concreto para DESCARGAR
-    # ----------------------------------------------------------------
-    router.get '/reports/twitter/json/yearmonth/:yearmonth', (req, res) ->
-        yearmonth = req.params.yearmonth
-        if not /^\d\d\d\d-\d\d$/.test(yearmonth) then return res.json {error: "Format de 'yearmonth' invàlid. Format vàlid: 'YYYY-MM'."}
-        year = yearmonth.split('-')[0]
-        if year not in year_list
-            return res.json {error: "Any no disponible a MongoDB: #{year}"}
-
-        # Preparamos query y projection
-        # ------------------------------
-        query = {'header.month': yearmonth}
-        projection = {_id: 0}
-
-        collection_name = 'twitter_monthly_json_reports_<year>'.replace '<year>', year
-        config.mongo_cols[collection_name].find(query, projection).toArray (err, items) ->
-            if not err
-                if items.length is 0
-                    res.json {error: "No existeixen dades per el 'yearmonth' indicat: <strong>#{yearmonth}</strong>"}
-                else
-                    # Preparamos JSON para descarga
-                    # ------------------------------
-                    res.writeHead(200, {'Content-Type': 'application/force-download','Content-disposition':"attachment; filename=twitter-json-report-#{yearmonth}.json"})
-                    res.end JSON.stringify(items[0], null, 2)
-            else
-                res.json {error: err}
-
-
-
     # ----------------------------------------------------------------------------------------------------
-    # EXTRAE los datos de las diferentes secciones del informe y devuelve un CSV para cada sección
+    # EXTRAE los datos de las diferentes secciones del informe y devuelve un CSV con Tweet counts y Language counts
     # ----------------------------------------------------------------------------------------------------
     router.get '/reports/twitter/csv/json/:section/yearmonth/:yearmonth/csv', (req, res) ->
 
@@ -132,7 +99,7 @@ create_router = (config) ->
             return res.json {error: "Any no disponible a MongoDB: #{year}"}
 
         section = req.params.section
-        valid_sections = ['tweet_counts', 'language_counts', 'rankings', 'influencers']
+        valid_sections = ['tweet_counts', 'language_counts']
         if section not in valid_sections then return res.json {error: "Valor de 'section' desconegut. Valors vàlids: #{JSON.stringify valid_sections}"}
 
         # Preparamos query y projection
@@ -140,7 +107,6 @@ create_router = (config) ->
         query = {'header.month': yearmonth}
 
         projection = {_id: 0, "sections.#{section}": 1}
-
         collection_name = 'twitter_monthly_json_reports_<year>'.replace '<year>', year
         config.mongo_cols[collection_name].find(query, projection).toArray (err, items) ->
             if not err
@@ -176,97 +142,6 @@ create_router = (config) ->
                             rows_csv.push row
                         csv = rows_csv.join('\n')
                         res.writeHead(200, {'Content-Type': 'application/force-download','Content-disposition':"attachment; filename=twitter-languages-counts-#{req.params.yearmonth}.csv"})
-                        res.end csv
-                    else if section is 'rankings'
-                        rankings_length = 5
-                        header = "\"\","
-                        g_brands.forEach (brand) ->
-                            header = header.concat "#{brand.charAt(0).toUpperCase() + brand.slice(1)},,"
-                        rows_csv.push header
-                        brand_cols = []
-                        g_brands.forEach (brand) ->
-                            col = {}
-                            col.brand = brand
-                            col.rankings = []
-                            for category_key of g_categories
-                                rankings = []
-                                data[brand][category_key]['top20'].forEach (ranking) ->
-                                    if 'selected' of ranking and ranking['selected'] is true
-                                        if rankings.length < rankings_length
-                                            item = {}
-                                            item.category = g_categories[category_key]
-                                            item.canonical_name = ranking.canonical_name
-                                            item.count = ranking.count
-                                            rankings.push item
-                                while rankings.length < rankings_length
-                                    item = {}
-                                    item.category = g_categories[category_key]
-                                    item.canonical_name = ''
-                                    item.count = ''
-                                    rankings.push item
-                                Array::push.apply col.rankings, rankings
-                            brand_cols.push col
-                        ranking_counter = 0
-                        num_rows = rankings_length * Object.keys(g_categories).length
-                        while ranking_counter < num_rows
-                            brand_counter = 0
-                            row = ""
-                            g_brands.forEach (brand) ->
-                                item = brand_cols[brand_counter].rankings[ranking_counter]
-                                if brand_counter is 0
-                                    row = row.concat "#{item.category},"
-                                row = row.concat "#{item.canonical_name}, #{item.count}, "
-                                brand_counter++
-                            ranking_counter++
-                            rows_csv.push row 
-                        csv = rows_csv.join('\n')
-                        res.writeHead(200, {'Content-Type': 'application/force-download','Content-disposition':"attachment; filename=twitter-rankings-#{req.params.yearmonth}.csv"})
-                        res.end csv
-                    else if section is 'influencers'
-                        influencers_length = 5
-                        header = "\"\","
-                        g_brands.forEach (brand) ->
-                            header = header.concat "#{brand.charAt(0).toUpperCase() + brand.slice(1)},,"
-                        rows_csv.push header
-                        brand_cols = []
-                        g_brands.forEach (brand) ->
-                            col = {}
-                            col.brand = brand
-                            col.influencers = []
-                            for category_key of g_categories_influencers
-                                influencers_list = []
-                                data[brand].forEach (influencer) ->
-                                    if 'selected' of influencer and influencer['selected'] is true and influencer['category'] is category_key
-                                        if influencers_list.length < influencers_length
-                                            item = {}
-                                            item.category = g_categories_influencers[category_key]
-                                            item.name = influencer.influencer
-                                            item.count = influencer.count
-                                            influencers_list.push item
-                                while influencers_list.length < influencers_length
-                                    # influencers_list.push null
-                                    item = {}
-                                    item.category = g_categories_influencers[category_key]
-                                    item.name = ''
-                                    item.count = 0
-                                    influencers_list.push item
-                                Array::push.apply col.influencers, influencers_list
-                            brand_cols.push col
-                        influencer_counter = 0
-                        num_rows = influencers_length * Object.keys(g_categories_influencers).length
-                        while influencer_counter < num_rows
-                            brand_counter = 0
-                            row = ""
-                            g_brands.forEach (brand) ->
-                                item = brand_cols[brand_counter].influencers[influencer_counter]
-                                if brand_counter is 0
-                                    row = row.concat "#{item.category},"
-                                row = row.concat "#{item.name}, #{item.count}, "
-                                brand_counter++
-                            influencer_counter++
-                            rows_csv.push row 
-                        csv = rows_csv.join('\n')
-                        res.writeHead(200, {'Content-Type': 'application/force-download','Content-disposition':"attachment; filename=twitter-influencers-#{req.params.yearmonth}.csv"})
                         res.end csv
             else
                 res.json {error: err}
@@ -365,6 +240,11 @@ create_router = (config) ->
                             total_tweet_counts[brand] = tweets_by_brand_array.reduce ( (a, b) -> return a + b )
                             # Generate csv row for a brand
                             viral_touristic_tweets_by_brand_array = viral_data.filter ( (item) -> item.brand is brand )
+                            # console.log('viral_touristic_tweets_by_brand_array.length: ' + viral_touristic_tweets_by_brand_array.length)
+                            if viral_touristic_tweets_by_brand_array.length is 0
+                                console.log("No existeixen viral tweets per brand #{brand} and any <strong>#{year}</strong>")
+                                return null
+
                             viral_touristic_counts_by_brand_array = viral_touristic_tweets_by_brand_array.map ( (tweet) -> tweet.count )
                             viral_touristic_counts_by_brand = viral_touristic_counts_by_brand_array.reduce ( (a, b) -> return a + b )
                             
@@ -410,11 +290,15 @@ create_router = (config) ->
 
                             # Get monthly CSV.
                             month_brands_counts_table = process_data(month_items, month_viral_tweets_array)
-                            try
-                                create_csv(output_dir + 'csvs/brands_counts.csv', month_brands_counts_table)
-                                resolve viral_tweets_array
-                            catch e
-                                reject {error: e}
+                            if month_brands_counts_table.length < g_brands.length
+                                err = "No viral tweets for some brands for yearmonth #{yearmonth}."
+                                reject {error: err}
+                            else
+                                try
+                                    create_csv(output_dir + 'csvs/brands_counts.csv', month_brands_counts_table)
+                                    resolve viral_tweets_array
+                                catch e
+                                    reject {error: e}
                     else
                         reject {error: err}
 
@@ -890,114 +774,6 @@ create_router = (config) ->
             .catch (error) ->
                 console.error 'failed', error
                 res.json {error: error}
-
-
-    # ------------------------------------------------
-    # EXTRAE una sección de un report JSON de Twitter
-    # ------------------------------------------------
-    router.get '/reports/twitter/json/:section/yearmonth/:yearmonth', (req, res) ->
-        yearmonth = req.params.yearmonth
-        if not /^\d\d\d\d-\d\d$/.test(yearmonth) then return res.json {error: "Format de 'yearmonth' invàlid. Format vàlid: 'YYYY-MM'."}
-
-        year = yearmonth.split('-')[0]
-        if year not in year_list
-            return res.json {error: "Any no disponible a MongoDB: #{year}"}
-
-        section = req.params.section
-        valid_sections = ['tweet_counts', 'language_counts', 'rankings', 'influencers']
-        if section not in valid_sections then return res.json {error: "Valor de 'section' desconegut. Valors vàlids: #{JSON.stringify valid_sections}"}
-
-        # Preparamos query y projection
-        # ------------------------------
-        query = {'header.month': yearmonth}
-
-        projection = {_id: 0, "sections.#{section}": 1}
-
-        collection_name = 'twitter_monthly_json_reports_<year>'.replace '<year>', year
-        config.mongo_cols[collection_name].find(query, projection).toArray (err, items) ->
-            if not err
-                if items.length is 0
-                    res.json {error: "No existeixen dades per el 'yearmonth' indicat: <strong>#{yearmonth}</strong>"}
-                else
-                    res.json {results: items[0].sections[section]}
-            else
-                res.json {error: err}
-
-
-    # --------------------------------------------------
-    # MODIFICA una sección de un report JSON de Twitter
-    # --------------------------------------------------
-    router.put '/reports/twitter/json/:section/yearmonth/:yearmonth', (req, res) ->
-        yearmonth = req.params.yearmonth
-        if not /^\d\d\d\d-\d\d$/.test(yearmonth) then return res.json {error: "Format de 'yearmonth' invàlid. Format vàlid: 'YYYY-MM'."}
-
-        year = yearmonth.split('-')[0]
-        if year not in year_list
-            return res.json {error: "Any no disponible a MongoDB: #{year}"}
-
-        section = req.params.section
-        valid_sections = ['notes', 'rankings', 'influencers', 'links']
-        if section not in valid_sections then return res.json {error: "Valor de 'section' desconegut. Valors vàlids: #{JSON.stringify valid_sections}"}
-
-        sectionContent = req.body[section]
-        # console.log(sectionContent)
-        sectionSetField = {}
-
-        if section is 'notes'
-            sectionSetField['notes'] = sectionContent
-        else if section is 'links'
-            sectionSetField['links'] = sectionContent
-        else
-            sectionSetField["sections.#{section}"] = sectionContent
-
-        collection_name = 'twitter_monthly_json_reports_<year>'.replace '<year>', year
-        config.mongo_cols[collection_name].update {'header.month': yearmonth}, {$set: sectionSetField}, (err, result) ->
-            if not err
-                result = JSON.parse result  # el result de un update se debe parsear, viene en formato JSON
-
-                if result.n is 0  # 'n' es equivalente al campo 'nModified'
-                    return res.json {error: "ERROR: No s'ha trobat el document amb yearmonth = '#{yearmonth}'"}
-
-                else if result.n is 1
-                    return res.json {result: 'ok'}
-
-                else
-                    return res.json {error: result}
-
-            else
-                return res.json {error: err}
-
-    # --------------------------------------------------------------------------------------
-    # GENERA report JSON Report de Twitter via Python Shell (elimina el existente en Mongo)
-    # --------------------------------------------------------------------------------------
-    router.get '/reports/twitter/generate/json', (req, res) ->
-
-        # Mes del JSON a eliminar (lastmonth)
-        # ------------------------------------
-        month = moment().subtract(1, 'months').format 'YYYY-MM'
-        year = month.split('-')[0]
-
-        # Borramos JSON del mes anterior guardado en Mongo
-        # -------------------------------------------------
-        collection_name = 'twitter_monthly_json_reports_<year>'.replace '<year>', year
-        config.mongo_cols[collection_name].deleteOne {'header.month': month}, (err, results) ->
-            if not err
-
-                # Procedemos a invocar el script que genera JSON report con Python Shell
-                # -----------------------------------------------------------------------
-                params =
-                    pythonPath: config.context.twitter.reporting_python_path,
-                    scriptPath: config.context.twitter.reporting_base_dir,
-                    args: ['--month', 'lastmonth', '--silent']
-                PythonShell.run 'json_generator.py', params, (error, results) ->
-                    if error
-                        res.json {error: error}
-                    else
-                        results = JSON.parse results
-                        res.json {results: results.result}
-
-            else
-                res.json {error: "S'ha produït un error eliminant el JSON existent a MongoDB. Contacti amb l'administrador."}
 
 
     # --------------------------------------------------------------------------------------------------------------

@@ -21,7 +21,6 @@
     "moment": "^2.18.1",
     "mongodb": "^2.1.14",
     "node-ngram": "0.0.8",
-    "python-shell": "^0.4.0",
     "react-month-picker-input": "^1.1.6",
     "react-simple-maps": "~0.12.0",
     "twix": "^1.1.1"

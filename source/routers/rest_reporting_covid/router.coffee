@@ -2,7 +2,6 @@ fs = require 'fs'
 express = require 'express'
 bodyParser = require 'body-parser'
 MongoClient = require('mongodb').MongoClient
-PythonShell = require 'python-shell'
 moment = require 'moment'
 archiver = require 'archiver'
 path = require 'path'
@@ -62,8 +61,6 @@ create_router = (config) ->
         for filename in zips
             if(filename.match(re)[0] == date)
                 zip_file = zip_dir + filename
-
-                console.log("zip_file:" + zip_file)
                 file = fs.createReadStream zip_file
                 stat = fs.statSync zip_file
                 res.setHeader('Content-Length', stat.size)

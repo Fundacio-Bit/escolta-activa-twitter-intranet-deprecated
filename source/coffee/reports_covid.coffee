@@ -49,6 +49,7 @@ g_language_counts = {}  # it will save language count globally for each yearmont
                 # console.log("RESULTS\n" + JSON.stringify(data.results))
                 files = data.results
                 reports = []
+                index = 0
                 files.forEach (file) ->
                     report = {}
                     report.source = source  # fix the source
@@ -57,14 +58,20 @@ g_language_counts = {}  # it will save language count globally for each yearmont
                     # ZIP download
                     # ------------
                     zip_html = ''
-
+                    if index%6 == 0
+                        zip_html += "<tr>"
+                    zip_html += "<td border=1 width='15%'>"
                     zip_html += "<div id=\"zip_#{report.date}\">"
                     rest_url_to_zip = "/rest_reporting_covid/reports/#{source}/zip/date/#{report.date}"  # llamada REST que devuelve el ZIP
                     zip_html += "<a href=\"#{rest_url_to_zip}\"><img src=\"/img/file-zip-icon.png\" width=\"60\" height=\"60\"></a>"
                     zip_html += "<p><strong>#{report.date}</strong></p>"
                     zip_html += "</div>"
+                    zip_html += "</td>"
+                    if index%6 == 5
+                        zip_html += "</tr>"
 
                     report.zip_html = zip_html
+                    index +=1
                     reports.push(report)
 
                 # Render the reports list

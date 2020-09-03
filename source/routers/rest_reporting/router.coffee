@@ -291,7 +291,7 @@ create_router = (config) ->
                             # Get monthly CSV.
                             month_brands_counts_table = process_data(month_items, month_viral_tweets_array)
                             if month_brands_counts_table.length < g_brands.length
-                                err = "No viral tweets for some brands for yearmonth #{yearmonth}."
+                                err = "Fins que no seleccioni els tuits virals no es pot generar el fitxer zip."
                                 reject {error: err}
                             else
                                 try

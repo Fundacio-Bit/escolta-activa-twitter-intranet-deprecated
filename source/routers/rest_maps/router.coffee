@@ -11,8 +11,6 @@ create_router = (config) ->
     router = express.Router()
 
     g_brands = config.brand_list
-    g_influencers_categories = config.dictionary_influencers_categories
-    fichero = config.context.dictionary_influencers_json
 
     # -------------------------------------
     # List REST methods of the router

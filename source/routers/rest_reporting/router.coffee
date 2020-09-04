@@ -86,66 +86,6 @@ create_router = (config) ->
             else
                 res.json {error: err}
 
-    # ----------------------------------------------------------------------------------------------------
-    # EXTRAE los datos de las diferentes secciones del informe y devuelve un CSV con Tweet counts y Language counts
-    # ----------------------------------------------------------------------------------------------------
-    router.get '/reports/twitter/csv/json/:section/yearmonth/:yearmonth/csv', (req, res) ->
-
-        yearmonth = req.params.yearmonth
-        if not /^\d\d\d\d-\d\d$/.test(yearmonth) then return res.json {error: "Format de 'yearmonth' invàlid. Format vàlid: 'YYYY-MM'."}
-
-        year = yearmonth.split('-')[0]
-        if year not in year_list
-            return res.json {error: "Any no disponible a MongoDB: #{year}"}
-
-        section = req.params.section
-        valid_sections = ['tweet_counts', 'language_counts']
-        if section not in valid_sections then return res.json {error: "Valor de 'section' desconegut. Valors vàlids: #{JSON.stringify valid_sections}"}
-
-        # Preparamos query y projection
-        # ------------------------------
-        query = {'header.month': yearmonth}
-
-        projection = {_id: 0, "sections.#{section}": 1}
-        collection_name = 'twitter_monthly_json_reports_<year>'.replace '<year>', year
-        config.mongo_cols[collection_name].find(query, projection).toArray (err, items) ->
-            if not err
-                if items.length is 0
-                    res.json {error: "No existeixen dades per el 'yearmonth' indicat: <strong>#{yearmonth}</strong>"}
-                else
-                    # res.json {results: items[0].sections[section]}
-
-                    data = items[0].sections[section]
-
-                    # Creamos un fichero CSV con las palabras
-                    # ----------------------------------------
-                    rows_csv = []
-                    if section is 'tweet_counts'
-                        rows_csv.push "\"marca\",\"total\",\"variació\""  # header
-                        g_brands.forEach (brand) ->
-                            rows_csv.push "\"#{brand}\",\"#{data.total[brand]}\",\"#{data.variation[brand]}\""
-                        csv = rows_csv.join('\n')
-                        res.writeHead(200, {'Content-Type': 'application/force-download','Content-disposition':"attachment; filename=twitter-tweet-counts-#{req.params.yearmonth}.csv"})
-                        res.end csv
-                    else if section is 'language_counts'
-                        header = "\"idioma\","
-                        g_brands.forEach (brand) ->
-                            header = header.concat "\"#{brand}\","
-                        header = header.concat "\"Total\",\"%Total\""
-                        rows_csv.push header
-                        for key of g_languages
-                            row = "\"#{g_languages[key]}\","
-                            g_brands.forEach (brand) ->
-                                row= row.concat "\"#{data[brand][key]}\","
-                            row= row.concat "\"#{data['per_lang'][key].count}\","
-                            row= row.concat "\"#{data['per_lang'][key].percent}\""
-                            rows_csv.push row
-                        csv = rows_csv.join('\n')
-                        res.writeHead(200, {'Content-Type': 'application/force-download','Content-disposition':"attachment; filename=twitter-languages-counts-#{req.params.yearmonth}.csv"})
-                        res.end csv
-            else
-                res.json {error: err}
-
     # ------------------------------------------------
     # EXTRAE report ZIP de Twitter de un mes concreto
     # ------------------------------------------------

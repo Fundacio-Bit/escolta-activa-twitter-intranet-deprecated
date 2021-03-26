@@ -46,10 +46,18 @@
       <li class="dropdown {{#if maps_is_active}}active{{/if}}"><a href="/maps">Mapes</a></li>
 
       <!-- REPORTS -->
-      <li class="{{#if reports_is_active}}active{{/if}}"><a href="/reports">Edici&oacute; de Reports</a></li>
+      <li class="dropdown {{#if reports_is_active}}active{{/if}}">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/reports">Edici&oacute; de Reports</a></li>
+          <li><a href="/reports_covid">Reports COVID</a></li>
+          <li><a href="/reports_airlines">Reports Sector Aeri</a></li>
+        </ul>
+      </li>
+      {{!-- <li class="{{#if reports_is_active}}active{{/if}}"><a href="/reports">Edici&oacute; de Reports</a></li>
 
       <!-- REPORTS COVID-->
-      <li class="{{#if reports_covid_is_active}}active{{/if}}"><a href="/reports_covid">Reports COVID</a></li>
+      <li class="{{#if reports_covid_is_active}}active{{/if}}"><a href="/reports_covid">Reports COVID</a></li> --}}
     </ul>
   </div>
 </nav>

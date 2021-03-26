@@ -1,0 +1,8 @@
+<p>Trobats <strong>{{total_reports}}</strong> csv's del <strong>{{source}} sector aeri</strong>.</p>
+<ul class="list-group">
+  <table border="0"  width="100%">
+  {{#each reports}}
+    {{{csv_html}}}
+  {{/each}}
+  </table>
+</ul>

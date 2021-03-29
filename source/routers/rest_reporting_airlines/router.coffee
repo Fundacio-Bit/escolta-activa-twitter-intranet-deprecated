@@ -36,7 +36,7 @@ create_router = (config) ->
     # Lista de métodos REST de este router
     # -------------------------------------
     router.get '/', (req, res) ->
-        path_list = ('/rest_reporting_covid' + x.route.path for x in router.stack when x.route?)
+        path_list = ('/rest_reporting_airlines' + x.route.path for x in router.stack when x.route?)
         res.json {rest_methods: path_list}
 
     # -------------------------------------------------------------------------------------------------------

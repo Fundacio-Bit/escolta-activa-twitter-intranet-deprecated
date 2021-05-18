@@ -56,6 +56,7 @@ create_router = (config) ->
         config.mongo_cols[collection_name].find(query, projection).sort({'header.month': -1}).toArray (err, items) ->
             if not err
                 if items.length is 0
+                    # console.log(collection_name)
                     res.json {error: "No existeixen dades per l'any indicat: <strong>#{req.params.year}</strong> a la colleció " + collection_name}
                 else
                     zips = utils.get_zip_files(config.context.output_base_dir)  # sacamos los paths de los zip's que existen actualment
@@ -111,6 +112,7 @@ create_router = (config) ->
         config.mongo_cols[collection_name].find(query, projection).toArray (err, items) ->
             if not err
                 if items.length is 0
+                    # console.log(collection_name)
                     res.json {error: "No existeixen dades per el 'yearmonth' indicat: <strong>#{yearmonth}</strong>"}
                 else
                     # res.json {results: items[0].sections[section]}
@@ -210,7 +212,9 @@ create_router = (config) ->
                 config.mongo_cols[collection_name].find(query, projection).toArray (err, items) ->
                     if not err
                         if items.length is 0
-                            reject {error: "No existeixen dades per l'any indicat: <strong>#{year}</strong>"}
+                            # console.log(collection_name + ": " + months_so_far)
+                            error_message = "Fins que no seleccioni algun tuit viral per a l'any seleccionat no es pot generar el fitxer zip"
+                            reject {error: error_message + " per <strong>#{year}</strong>"}
                         else
                             ## Add brand to items
                             items.forEach (tweet) ->
@@ -265,6 +269,7 @@ create_router = (config) ->
                 config.mongo_cols[collection_name].find(query, projection).toArray (err, items) ->
                     if not err
                         if items.length is 0
+                            # console.log(collection_name)
                             reject {error: "No existeixen dades per l'any indicat: <strong>#{year}</strong>"}
                         else
                             ## CUMULATIVE CSVs ##
@@ -807,6 +812,7 @@ create_router = (config) ->
         config.mongo_cols[col_name].find(query, projection).sort({count: -1 }).toArray (err, items) ->
             if not err
                 if items.length is 0
+                    # console.log(col_name)
                     res.json {error: "No existeixen dades per l'any-mes indicat: <strong>#{req.params.yearmonth}</strong>"}
                 else
                     # Creamos un fichero CSV con las palabras

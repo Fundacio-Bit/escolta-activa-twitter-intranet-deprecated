@@ -24,7 +24,7 @@ create_router = (config) ->
 
     utils = require './_utils_files_avail'
 
-    output_dir = config.context.output_base_dir + "twitter/covid_tourism/"
+    output_dir = config.context.output_base_dir + "twitter/tourism/"
     zip_dir = output_dir + "zip/"
     get_zip_files = utils.get_zip_files(zip_dir)
 
